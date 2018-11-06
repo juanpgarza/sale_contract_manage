@@ -48,7 +48,7 @@ msgstr "Checklist"
 #. module: employee_documents_expiry
 #: model:ir.model.fields,field_description:employee_documents_expiry.field_employee_checklist_document_type
 msgid "Checklist Type"
-msgstr "Checklist Type"
+msgstr "Tipo de Checklist"
 
 #. module: employee_documents_expiry
 #: model:ir.model.fields,field_description:employee_documents_expiry.field_employee_checklist_create_uid
@@ -120,17 +120,17 @@ msgstr "Employee Ref"
 #. module: employee_documents_expiry
 #: selection:employee.checklist,document_type:0
 msgid "Entry Process"
-msgstr "Entry Process"
+msgstr "Proceso de ingreso"
 
 #. module: employee_documents_expiry
 #: selection:employee.checklist,document_type:0
 msgid "Exit Process"
-msgstr "Exit Process"
+msgstr "Proceso de egreso"
 
 #. module: employee_documents_expiry
 #: model:ir.model.fields,field_description:employee_documents_expiry.field_hr_employee_document_expiry_date
 msgid "Expiry Date"
-msgstr "Expiry Date"
+msgstr "Fecha de vencimiento"
 
 #. module: employee_documents_expiry
 #: model:ir.actions.server,name:employee_documents_expiry.employee_data_reminder_ir_actions_server
@@ -176,7 +176,7 @@ msgstr "Última actualización en"
 #. module: employee_documents_expiry
 #: selection:employee.checklist,document_type:0
 msgid "Other"
-msgstr "Other"
+msgstr "Otro"
 
 #. module: employee_documents_expiry
 #: model:ir.model.fields,help:employee_documents_expiry.field_hr_employee_document_doc_attachment_id

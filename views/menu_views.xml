@@ -1,0 +1,125 @@
+<odoo>
+  <data>
+
+    <menuitem id="menu_control_documental"
+        name="Control Documental"
+        sequence="1"/>
+
+    <menuitem id="menu_control_documental_contratos"
+        name="Contratos"
+        parent="menu_control_documental"
+        sequence="2"/>
+
+    <menuitem id="menu_control_documental_contratos_abm"
+        parent="menu_control_documental_contratos"
+        action="action_view_sale_contract"
+        sequence="3"/>
+
+    <menuitem id="menu_control_documental_recursos"
+        name="Recursos"
+        parent="menu_control_documental"
+        sequence="2"/>
+
+    <menuitem id="menu_control_documental_empleados_abm"
+        parent="menu_control_documental_recursos"
+        action="hr.open_view_employee_list_my"
+        name="Empleados"
+        sequence="3"/>
+
+    <menuitem id="menu_control_documental_vehiculos_abm"
+        parent="menu_control_documental_recursos"
+        action="fleet.fleet_vehicle_action"
+        name="Vehículos"
+        sequence="3"/>
+
+    <menuitem id="menu_control_documental_documentos"
+        name="Documentación"
+        parent="menu_control_documental"
+        sequence="2"/>
+
+    <act_window id="action_view_documentos_rh"  
+            name="RRHH"
+            res_model="hr.employee.document" 
+            view_mode="tree,form"
+            target="current"/>
+
+    <menuitem id="menu_control_documental_documentos_rh_abm"
+        parent="menu_control_documental_documentos"
+        action="action_view_documentos_rh"
+        sequence="3"/>
+
+    <menuitem id="menu_control_documental_documentos_vehiculos_contratos_abm"
+        parent="menu_control_documental_documentos"
+        action="fleet.fleet_vehicle_log_contract_action"
+        name="Contratos de vehículos"
+        sequence="3"/>
+
+    <menuitem id="menu_control_documental_configuracion"
+        name="Configuración"
+        parent="menu_control_documental"
+        sequence="2"/>
+
+    <menuitem id="menu_control_documental_configuracion_vehiculos"
+        name="Vehículos"
+        parent="menu_control_documental_configuracion"
+        sequence="2"/>
+
+    <menuitem id="menu_control_documental_configuracion_vehiculos_tiposcontratos"
+        name="Tipos Contratos Vehículos"
+        parent="menu_control_documental_configuracion_vehiculos"
+        action="fleet.fleet_vehicle_contract_types_action"
+        sequence="2"/>
+
+    <act_window id="action_view_task_type"  
+            name="Tipos de tareas"
+            res_model="hr.employee.task.type" 
+            view_mode="tree,form"
+            target="current"/>
+
+    <menuitem id="menu_control_documental_configuracion_tasktype"
+        name="Tipos de tareas"
+        parent="menu_control_documental_configuracion"
+        action="action_view_task_type"
+        sequence="2"/>
+
+    <act_window id="action_view_sale_contract"  
+            name="Contratos"
+            res_model="sale.order" 
+            view_mode="tree"
+            target="current"/>
+
+    <menuitem id="menu_view_sale_contract" parent="sale.sale_order_menu"
+        sequence="10" action="action_view_sale_contract" />
+
+    <record id="view_sale_contract_tree_action" model="ir.actions.act_window.view">
+        <!-- <field name="act_window_id" ref="sale.action_quotations" /> -->
+        <field name="act_window_id" ref="sale_contract_manage.action_view_sale_contract" />
+        <field name="view_id" ref="view_sale_contract_tree" />
+        <field name="view_mode">tree</field>
+        <field name="sequence">21</field>
+    </record>
+
+    <record id="view_sale_contract_form_action" model="ir.actions.act_window.view">
+        <!-- <field name="act_window_id" ref="sale.action_quotations" /> -->
+        <field name="act_window_id" ref="sale_contract_manage.action_view_sale_contract" />
+        <field name="view_id" ref="view_sale_contract_form" />
+        <field name="view_mode">form</field>
+        <field name="sequence">21</field>
+    </record>
+
+    <record id="view_sale_order_tree_action" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="sale.action_quotations" />
+        <field name="view_id" ref="sale.view_order_tree" />
+        <field name="view_mode">tree</field>
+        <field name="sequence">21</field>
+    </record>
+
+    <record id="view_sale_order_form_action" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="sale.action_quotations" />
+        <field name="view_id" ref="sale.view_order_form" />
+        <field name="view_mode">form</field>
+        <field name="sequence">21</field>
+    </record>
+
+  </data>
+</odoo>

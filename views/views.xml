@@ -1,74 +1,11 @@
 <odoo>
   <data>
-
-    <menuitem id="menu_control_documental"
-        name="Control Documental"
-        sequence="1"/>
-
-    <menuitem id="menu_control_documental_contratos"
-        name="Contratos"
-        parent="menu_control_documental"
-        sequence="2"/>
-
-    <menuitem id="menu_control_documental_contratos_abm"
-        parent="menu_control_documental_contratos"
-        action="action_view_sale_contract"
-        sequence="3"/>
-
-    <menuitem id="menu_control_documental_recursos"
-        name="Recursos"
-        parent="menu_control_documental"
-        sequence="2"/>
-
-    <menuitem id="menu_control_documental_empleados_abm"
-        parent="menu_control_documental_recursos"
-        action="hr.open_view_employee_list_my"
-        name="Empleados"
-        sequence="3"/>
-
-    <menuitem id="menu_control_documental_vehiculos_abm"
-        parent="menu_control_documental_recursos"
-        action="fleet.fleet_vehicle_action"
-        name="Vehículos"
-        sequence="3"/>
-
-    <menuitem id="menu_control_documental_documentos"
-        name="Documentos"
-        parent="menu_control_documental"
-        sequence="2"/>
-
-    <act_window id="action_view_documentos_rh"  
-            name="RRHH"
-            res_model="hr.employee.document" 
-            view_mode="tree"
-            target="current"/>
-
-    <menuitem id="menu_control_documental_documentos_rh_abm"
-        parent="menu_control_documental_documentos"
-        action="action_view_documentos_rh"
-        sequence="3"/>
-
-    <menuitem id="menu_control_documental_documentos_vehiculos_contratos_abm"
-        parent="menu_control_documental_documentos"
-        action="fleet.fleet_vehicle_log_contract_action"
-        sequence="3"/>
-
-    <menuitem id="menu_control_documental_configuracion"
-        name="Configuración"
-        parent="menu_control_documental"
-        sequence="2"/>
-
-    <menuitem id="menu_control_documental_configuracion_vehiculos"
-        name="Vehículos"
-        parent="menu_control_documental_configuracion"
-        sequence="2"/>
-
-    <menuitem id="menu_control_documental_configuracion_vehiculos_tiposcontratos"
-        name="Tipos Contratos Vehículos"
-        parent="menu_control_documental_configuracion_vehiculos"
-        action="fleet.fleet_vehicle_contract_types_action"
-        sequence="2"/>        
-
+ 
+    <!-- 
+    ##################################################
+        sale.order 
+    ##################################################
+    -->
     <record model="ir.ui.view" id="view_sale_contract_tree">
         <field name="model">sale.order</field>
         <field eval="10" name="priority"/>
@@ -84,17 +21,27 @@
         </field>
     </record>
 
-        <record model="ir.ui.view" id="view_sale_contract_form">
+
+        <record model="ir.actions.act_window" id="empleados_asignados_action">
+            <field name="name">Empleados</field>
+            <field name="context">{'search_default_order_id': active_id}</field>
+            <field name="res_model">sale.contract.employee</field>
+        </record>
+
+    <record model="ir.ui.view" id="view_sale_contract_form">
         <!-- <field name="name">Operation Types</field> -->
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
             <form string="Contratos">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
+                </header>
               <sheet>
-                    <div class="oe_button_box" name="button_box">
-                      <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                          <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                      </button>
-                    </div>
+                <div class="oe_button_box" name="button_box">
+
+                    <button name="%(empleados_asignados_action)d" icon="fa-arrows" class="oe_stat_button" string="Empleados Asignados" type="action"/>
+                </div>
+
                     <group> 
                         <group>
                             <field name="id"/>
@@ -107,9 +54,10 @@
                     </group>
                     <notebook>
                         <page string="Empleados">
-                            <field name="employee_ids" widget="one2many_list">                    
-                                <tree string="Empleados" editable="bottom">
-                                    <field name="employee_id" />
+                            <field name="employee_ids">                    
+                                <tree string="Empleados" create="0" update="0">
+                                    <field name="employee_id"/>
+                                    <field name="requisitos_completos"/>
                                 </tree>
                             </field>
                         </page>
@@ -122,52 +70,94 @@
                         </page>
                     </notebook>
                 </sheet>
-                        
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>	
 
+    <!-- 
+    ##################################################
+        sale.contract.employee 
+    ##################################################
+    -->
+    
+    <record model="ir.ui.view" id="view_sale_contract_employee_tree">
+        <field name="model">sale.contract.employee</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <!-- <tree create="1" update="1" delete="1"> -->
+            <tree>
+                <!-- <field name="default_code"/> -->
+                <field name="id" invisible="0"/>
+                <field name="employee_id" invisible="0"/>
+                <field name="order_id" invisible="0"/>
+                <field name="requisitos_completos"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_sale_contract_employee_form">
+        <field name="model">sale.contract.employee</field>
+        <field name="arch" type="xml">
+            <form string="Empleado afectado a contrato">
+              <sheet>
+
+                    <group> 
+                        <group>
+                            <field name="id"/>
+                            <field name="employee_id"/>
+                        </group>
+                        <group>
+                            <field name="order_id"/>
+                            <field name="fecha_alta_contrato"/>                                                       
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
             </form>
         </field>
     </record>
-	
-	
-	<record id="view_sale_contract_tree_action" model="ir.actions.act_window.view">
-        <!-- <field name="act_window_id" ref="sale.action_quotations" /> -->
-        <field name="act_window_id" ref="sale_contract_manage.action_view_sale_contract" />
-        <field name="view_id" ref="view_sale_contract_tree" />
-        <field name="view_mode">tree</field>
-        <field name="sequence">21</field>
+
+    <record id="view_sale_contract_employee_search" model="ir.ui.view">
+        <field name="model">sale.contract.employee</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="order_id"/>
+            </search>
+        </field>
     </record>
 
-    <record id="view_sale_contract_form_action" model="ir.actions.act_window.view">
-        <!-- <field name="act_window_id" ref="sale.action_quotations" /> -->
-        <field name="act_window_id" ref="sale_contract_manage.action_view_sale_contract" />
-        <field name="view_id" ref="view_sale_contract_form" />
-        <field name="view_mode">form</field>
-        <field name="sequence">21</field>
+    <!-- 
+    ##################################################
+        fleet.vehicle.log.contract 
+    ##################################################
+    -->
+
+    <record model="ir.ui.view" id="fleet_vehicle_log_contract_view_tree_inherit">
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_tree"/>
+        <field name="arch" type="xml">            
+
+            <field name="amount" position='replace'>
+                <field name="amount" invisible="1"/>
+            </field>
+
+            <field name="cost_generated" position='replace'>
+                <field name="cost_generated" invisible="1"/>
+            </field>
+
+            <field name="cost_frequency" position='replace'>
+                <field name="cost_frequency" invisible="1"/>
+            </field>
+
+        </field>
     </record>
-	
-	
-  <record id="view_sale_order_tree_action" model="ir.actions.act_window.view">
-      <field name="act_window_id" ref="sale.action_quotations" />
-      <field name="view_id" ref="sale.view_order_tree" />
-      <field name="view_mode">tree</field>
-      <field name="sequence">21</field>
-  </record>
-
-	<record id="view_sale_order_form_action" model="ir.actions.act_window.view">
-        <field name="act_window_id" ref="sale.action_quotations" />
-        <field name="view_id" ref="sale.view_order_form" />
-        <field name="view_mode">form</field>
-        <field name="sequence">21</field>
-    </record>
-
-    <act_window id="action_view_sale_contract"  
-            name="Contratos"
-            res_model="sale.order" 
-            view_mode="tree"
-            target="current"/>
-
-    <menuitem id="menu_view_sale_contract" parent="sale.sale_order_menu"
-        sequence="10" action="action_view_sale_contract" />
 
   </data>
 </odoo>
