@@ -80,9 +80,6 @@ class ContractEmployeeRequirement(models.Model):
                                         'doc_id', 'attach_id3', string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
 
-"""     doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel', 'doc_id', 'attach_id3', string="Attachment",
-                                         help='You can attach the copy of your document', copy=False) """
-
 
 class RequirementAttachment(models.Model):
     _inherit = 'ir.attachment'
@@ -90,22 +87,6 @@ class RequirementAttachment(models.Model):
     doc_attach_rel = fields.Many2many('sale.contract.employee.requirement', 'doc_attachment_id', 'attach_id3', 'doc_id',
                                       string="Attachment", invisible=1)
 
-    # decoded_data = base64.b64decode(super.datas)
-
-    decoded_data = fields.Binary( string='Decode', 
-            compute='_compute_decode')
-
-    @api.depends('datas') 
-    def _compute_decode(self):
-        for a in self:
-            a.decoded_data = base64.b64decode(a.datas)
-
-
-""" class HrEmployeeAttachment(models.Model):
-    _inherit = 'ir.attachment'
-
-    doc_attach_rel = fields.Many2many('hr.employee.document', 'doc_attachment_id', 'attach_id3', 'doc_id',
-                                      string="Attachment", invisible=1) """
 
 class ContractEmployeeRequirementRecursoTipo(models.Model):
     """"""

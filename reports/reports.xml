@@ -26,8 +26,12 @@
                         <t t-foreach="e.employee_ids" t-as="r">
                             <div class="row"><div class="col-xs-3"><span t-field="r.requisito_contrato_id.descripcion" /></div></div>
                             
-                            <!-- <span t-field="r.imagen" t-options="{'widget':'image'}" class="media-object" /> -->
-                            
+                            <!-- esto tambien funciona OK
+                            <span t-field="r.imagen" t-options="{'widget':'image'}" class="media-object" /> 
+                            -->
+                            <!-- este me permite adjuntar tantas imagenes como quiera 
+                            y tambien otro tipo de adjuntos
+                            -->
                             <t t-foreach="r.doc_attachment_id" t-as="a">
                                 <div class="row"><div class="col-xs-3"><span t-field="a.id" /></div></div>
                                 
