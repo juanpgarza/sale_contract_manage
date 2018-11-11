@@ -23,7 +23,7 @@
 
 
         <record model="ir.actions.act_window" id="empleados_asignados_action">
-            <field name="name">Empleados</field>
+            <field name="name">RRHH</field>
             <field name="context">{'search_default_order_id': active_id}</field>
             <field name="res_model">sale.contract.employee</field>
         </record>
@@ -38,8 +38,8 @@
                 </header>
               <sheet>
                 <div class="oe_button_box" name="button_box">
-
-                    <button name="%(empleados_asignados_action)d" icon="fa-arrows" class="oe_stat_button" string="Empleados Asignados" type="action"/>
+                    <button name="%(empleados_asignados_action)d" icon="fa-arrows" class="oe_stat_button" 
+                    string="RRHH" type="action"/>
                 </div>
 
                     <group> 
@@ -92,29 +92,54 @@
             <tree>
                 <!-- <field name="default_code"/> -->
                 <field name="id" invisible="0"/>
-                <field name="employee_id" invisible="0"/>
                 <field name="order_id" invisible="0"/>
+                <field name="employee_id" invisible="0"/>
+                <field name="task_type_id" invisible="0"/>
+                <field name="tipo_recurso" invisible="0"/>
                 <field name="requisitos_completos"/>
             </tree>
         </field>
     </record>
 
+        <record model="ir.actions.act_window" id="empleados_requisitos_action">
+            <field name="name">Requisitos</field>
+            <field name="context">{'search_default_contract_employee_id': active_id}</field>
+            <field name="res_model">sale.contract.employee.requirement</field>
+        </record>
+
     <record model="ir.ui.view" id="view_sale_contract_employee_form">
         <field name="model">sale.contract.employee</field>
         <field name="arch" type="xml">
             <form string="Empleado afectado a contrato">
-              <sheet>
-
+              <sheet>                            
+                <div class="oe_button_box" name="button_box">
+                    <button name="%(empleados_requisitos_action)d" icon="fa-arrows" class="oe_stat_button" 
+                    string="Requisitos" type="action"/>
+                </div>
                     <group> 
                         <group>
                             <field name="id"/>
                             <field name="employee_id"/>
+                            <field name="task_type_id" invisible="0"/>                
                         </group>
                         <group>
                             <field name="order_id"/>
-                            <field name="fecha_alta_contrato"/>                                                       
+                            <field name="fecha_alta_contrato"/> 
+                            <field name="tipo_recurso" invisible="0"/>                                                      
                         </group>
                     </group>
+                    <button name="action_requisitos" 
+                            string="Requisitos" 
+                            type="object" 
+                            class="btn-primary"/>
+                    <field name="employee_ids">                    
+                        <!-- <tree string="RRHH" create="0" update="1" editable="top"> -->
+                        <tree string="RRHH" create="0" update="0">
+                            <field name="requisito_contrato_id" readonly="True"/>
+                            <field name="requisito_cumplido"/>
+                            <field name="doc_attachment_id" string="Adjunto"/>
+                        </tree>
+                    </field>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" />
@@ -132,6 +157,275 @@
             </search>
         </field>
     </record>
+
+    <!-- 
+    ##################################################
+        sale.contract.employee.requirement 
+    ##################################################
+    -->
+    <record model="ir.ui.view" id="view_hr_employee_requirement_tree">
+        <field name="model">sale.contract.employee.requirement</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="id" invisible="0"/>
+                <field name="requisito_contrato_id"/>
+                <field name="requisito_cumplido"/>
+                <field name="doc_attachment_id" string="Adjunto"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_employee_requirement_form">
+        <field name="model">sale.contract.employee.requirement</field>
+        <field name="arch" type="xml">
+            <form>
+              <sheet>
+                    <group> 
+                        <group>
+                            <field name="id"/>
+                            <field name="requisito_contrato_id" readonly="True"/>
+                            <field name="imagen"/>
+                            
+                        </group>
+                        <group>
+                            <field name="requisito_cumplido"/>
+                            <field name="doc_attachment_id" string="Adjunto" widget="many2many_binary" class="oe_inline"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sale_contract_employee_requirement_search" model="ir.ui.view">
+        <field name="model">sale.contract.employee.requirement</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contract_employee_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- 
+    ##################################################
+        sale.contract.employee.requirement.type 
+    ##################################################
+    -->
+    
+    <record model="ir.ui.view" id="view_hr_employee_requirement_type_tree">
+        <field name="model">sale.contract.employee.requirement.type</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="id" invisible="0"/>
+                <field name="descripcion" invisible="0"/>
+                <field name="tiene_vencimiento" invisible="0"/>
+                <field name="habilitacion_asociada"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_employee_requirement_type_form">
+        <field name="model">sale.contract.employee.requirement.type</field>
+        <field name="arch" type="xml">
+            <form>
+              <sheet>
+                    <group> 
+                        <group>
+                            <field name="id"/>
+                            <field name="habilitacion_asociada"/>
+                        </group>
+                        <group>
+                            <field name="descripcion"/>
+                            <field name="tiene_vencimiento" invisible="0"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- 
+    ##################################################
+        sale.contract.employee.requirement.recurso.tipo
+    ##################################################
+    -->
+
+    <record model="ir.ui.view" id="view_contract_requisito_recurso_tree">
+        <field name="model">sale.contract.employee.requirement.recurso.tipo</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="id" invisible="0"/>
+                <field name="tipo_recurso_id" invisible="0"/>
+                <field name="requisito_contrato_id" invisible="0"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_contract_requisito_recurso_form">
+        <field name="model">sale.contract.employee.requirement.recurso.tipo</field>
+        <field name="arch" type="xml">
+            <form>
+              <sheet>
+                    <group> 
+                        <group>
+                            <field name="id"/>
+                        </group>
+                        <group>
+                            <field name="tipo_recurso_id" invisible="0"/>
+                            <field name="requisito_contrato_id" invisible="0"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_contract_requisito_recurso_search" model="ir.ui.view">
+        <field name="model">sale.contract.employee.requirement.recurso.tipo</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="group_tipo_recurso" string="Por tipo recurso" context="{'group_by': 'tipo_recurso_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- 
+    ##################################################
+        hr.employee.task.type 
+    ##################################################
+    -->
+    
+    <record model="ir.ui.view" id="view_hr_employee_task_type_tree">
+        <field name="model">hr.employee.task.type</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="id" invisible="0"/>
+                <field name="descripcion" invisible="0"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_employee_task_type_form">
+        <field name="model">hr.employee.task.type</field>
+        <field name="arch" type="xml">
+            <form>
+              <sheet>
+                    <group> 
+                        <group>
+                            <field name="id"/>
+                        </group>
+                        <group>
+                            <field name="descripcion"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- 
+    ##################################################
+        hr.employee.habilitacion.tipo 
+    ##################################################
+    -->
+    
+    <record model="ir.ui.view" id="view_hr_employee_habilitacion_tipo_tree">
+        <field name="model">hr.employee.habilitacion.tipo</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="id" invisible="0"/>
+                <field name="descripcion" invisible="0"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_employee_habilitacion_tipo_form">
+        <field name="model">hr.employee.habilitacion.tipo</field>
+        <field name="arch" type="xml">
+            <form>
+              <sheet>
+                    <group> 
+                        <group>
+                            <field name="id"/>
+                        </group>
+                        <group>
+                            <field name="descripcion"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- 
+    ##################################################
+        hr.employee.recurso.tipo 
+    ##################################################
+    -->
+    
+    <record model="ir.ui.view" id="view_hr_employee_recurso_tipo_tree">
+        <field name="model">hr.employee.recurso.tipo</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="id" invisible="0"/>
+                <field name="descripcion" invisible="0"/>
+                <field name="observaciones"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_employee_recurso_tipo_form">
+        <field name="model">hr.employee.recurso.tipo</field>
+        <field name="arch" type="xml">
+            <form>
+              <sheet>
+                    <group> 
+                        <group>
+                            <field name="id"/>
+                        </group>
+                        <group>
+                            <field name="descripcion"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="observaciones"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+
 
     <!-- 
     ##################################################
@@ -159,5 +453,44 @@
         </field>
     </record>
 
+
+    <record model="ir.ui.view" id="view_partner_tree_inherit">
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">            
+
+            <field name="display_name" position='after'>
+                <field name="parent_id" invisible="0"/>
+            </field>
+
+        </field>
+    </record>
+
+<!--      <record model="ir.actions.act_window" id="partner_rrhh_action">
+        <field name="name">RRHH</field>
+        <field name="context">{'search_default_parent_id': active_id}</field>
+        <field name="res_model">res.partner</field>
+    </record>
+
+    <record id= "view_partner_form_inherited" model= "ir.ui.view">
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">                
+            <xpath expr="//button[@name='toggle_active']" position="before">
+                <button name="%(parent_id)d" icon="fa-arrows" 
+                class="oe_stat_button" string="RRHH" type="action"/>
+            </xpath>
+            
+        </field>
+    </record> -->
+
+<!--         <record id="view_res_partner_filter_inherited" model="ir.ui.view">
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <field name="parent_id"/>
+            </field>
+        </record>  --> 
+    
   </data>
 </odoo>

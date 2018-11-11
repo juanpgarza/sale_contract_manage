@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <report id="action_contrato" 
+        string="Contrato" 
+        model="sale.order" 
+        report_type="qweb-pdf"
+        name="sale_contract_manage.reporte_contrato"/>
+
+    <template id="reporte_contrato">
+        <t t-call="web.external_layout">            
+            <div class="page">
+                <t t-foreach="docs" t-as="o">
+<!--                     <div class="row">                    
+                        <div class="col-xs-4"><span t-field="o.id" /></div>
+                        <div class="col-xs-4"><span t-field="o.partner_id" /></div>
+                        <div class="col-xs-4"><span t-field="o.fecha_contrato" /></div>
+                    </div> -->
+
+                    <div class="row"><div class="col-xs-3">Contrato:</div><div class="col-xs-3"><span t-field="o.id" /></div></div>
+                    <div class="row"><div class="col-xs-3">Cliente:</div><div class="col-xs-3"><span t-field="o.partner_id" /></div></div>
+                    <div class="row"><div class="col-xs-3">Fecha:</div><div class="col-xs-3"><span t-field="o.fecha_contrato" /></div></div>
+                    
+                    <t t-foreach="o.employee_ids" t-as="e">
+                        <div class="row"><div class="col-xs-3">Nombre:</div><div class="col-xs-3"><span t-field="e.employee_id.display_name" /></div></div>
+                        <t t-foreach="e.employee_ids" t-as="r">
+                            <div class="row"><div class="col-xs-3"><span t-field="r.requisito_contrato_id.descripcion" /></div></div>
+                            
+                            <!-- <span t-field="r.imagen" t-options="{'widget':'image'}" class="media-object" /> -->
+                            
+                            <t t-foreach="r.doc_attachment_id" t-as="a">
+                                <div class="row"><div class="col-xs-3"><span t-field="a.id" /></div></div>
+                                
+                                <span t-field="a.datas" t-options="{'widget':'image'}" class="media-object" />
+                            </t>
+                        </t>
+                    </t>    
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>
